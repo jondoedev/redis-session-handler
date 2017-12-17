@@ -8,7 +8,7 @@ class App
     public static $logfile;
     public static $config;
     public static function init() {
-        $redisHandler = new CustomHandler(/*'127.0.0.1', 6379, 1*/);
+        $redisHandler = new CustomHandler();
         session_set_save_handler($redisHandler);
         session_start();
     }

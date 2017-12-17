@@ -3,25 +3,25 @@
 
 namespace Engine;
 
+use Predis\Client;
 use SessionHandlerInterface;
-//use Redis;
 
 
 class CustomHandler implements SessionHandlerInterface
 {
 
-//    protected $redis_credentials;
-//    protected $location;
-//    protected $port;
-//    protected $db;
-//    protected $log;
-//    const SIGNATURE = 'kalenyukk';
+    protected $redis;
 
-    public function __construct(/*$location, $port, $db*/)
+    public function __construct($host='127.0.0.1', $port=6379, $database=0)
     {
-//        $this->location = $location;
-//        $this->port = $port;
-//        $this->db = $db;
+	    $this->redis = new Client([
+		    'host'   => $host,
+		    'port'   => $port,
+	    ], [
+	    	'parameters' => [
+	    		'database' => $database
+		    ]
+	    ]);
     }
 
     public function close() {
@@ -41,11 +41,12 @@ class CustomHandler implements SessionHandlerInterface
     }
 
     public function read($session_id) {
-	    return (file_exists(__DIR__.'/'.$session_id)) ? file_get_contents(__DIR__.'/'.$session_id) : '';
+    	$result = $this->redis->get($session_id);
+	    return $result ? $result : '';
     }
 
     public function write($session_id, $session_data) {
-	    file_put_contents(__DIR__.'/'.$session_id, $session_data);
+	    $this->redis->set($session_id, $session_data);
 	    return true;
     }
 }
