@@ -9,7 +9,7 @@ class App
     public static $config;
     public static function init() {
         $redisHandler = new CustomHandler(/*'127.0.0.1', 6379, 1*/);
-//        session_set_save_handler($redisHandler);
+        session_set_save_handler($redisHandler);
         session_start();
     }
 

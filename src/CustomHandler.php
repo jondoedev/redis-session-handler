@@ -25,27 +25,27 @@ class CustomHandler implements SessionHandlerInterface
     }
 
     public function close() {
-        echo 'close';
+    	return true;
     }
 
     public function destroy($session_id) {
-        echo 'destroy';
+	    return true;
     }
 
     public function gc($maxlifetime) {
-        echo 'gc';
+	    return true;
     }
 
     public function open($save_path, $name) {
-        echo 'open';
+        return true;
     }
 
     public function read($session_id) {
-        echo 'read';
+	    return (file_exists(__DIR__.'/'.$session_id)) ? file_get_contents(__DIR__.'/'.$session_id) : '';
     }
 
     public function write($session_id, $session_data) {
-        echo 'write';
-
+	    file_put_contents(__DIR__.'/'.$session_id, $session_data);
+	    return true;
     }
 }
