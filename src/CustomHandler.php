@@ -3,6 +3,7 @@
 
 namespace Engine;
 
+use App\App;
 use Predis\Client;
 use SessionHandlerInterface;
 
@@ -10,9 +11,10 @@ use SessionHandlerInterface;
 class CustomHandler implements SessionHandlerInterface
 {
 
-    protected $redis;
+    public $redis;
+    const Prefix = 'kalenyuk: ';
+    public function __construct($host='127.0.0.1', $port=6379, $database=15)
 
-    public function __construct($host='127.0.0.1', $port=6379, $database=0)
     {
 	    $this->redis = new Client([
 		    'host'   => $host,
@@ -29,7 +31,10 @@ class CustomHandler implements SessionHandlerInterface
     }
 
     public function destroy($session_id) {
-	    return true;
+        $session_id = App::getSessionId();
+        $result = $this->redis->del(self::Prefix.$session_id);
+        session_destroy();
+	    return $result;
     }
 
     public function gc($maxlifetime) {
@@ -41,12 +46,24 @@ class CustomHandler implements SessionHandlerInterface
     }
 
     public function read($session_id) {
-    	$result = $this->redis->get($session_id);
-	    return $result ? $result : '';
+        $session_id = App::getSessionId();
+        $result = $this->redis->get($session_id);
+        $log_data = ['read' =>
+            ['ID' => $session_id]
+        ];
+        App::logger($log_data);
+        return $result ? $result : '';
+
     }
 
     public function write($session_id, $session_data) {
-	    $this->redis->set($session_id, $session_data);
+        $session_data = App::getSessionData();
+        $session_id = App::getSessionId();
+	    $this->redis->set(self::Prefix.$session_id, $session_data);
+	    $log_data = ['write' =>
+            ['ID' => $session_id, 'Data' => $session_data]
+        ];
+	    App::logger($log_data);
 	    return true;
     }
 }

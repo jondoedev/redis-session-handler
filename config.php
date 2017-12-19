@@ -1,7 +1,9 @@
 <?php
 
 return [
-//    'base_url' => '/dmitry.kalenyuk/sessions-codeit/public',
-	'base_url' => '/public',
-    'log_dir' => __DIR__.'/log/'
+      'base_url' => '/dmitry.kalenyuk/sessions-codeit/public',
+      'timezone' => 'Europe/Kiev',
+      'log_dir' => __DIR__.'/log/'
+
+
 ];
