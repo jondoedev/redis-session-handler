@@ -13,10 +13,10 @@ class App
     public static $logfile;
     public static function init()
     {
+        self::$config = require_once(__DIR__ . '/../config.php');
         $redisHandler = new CustomHandler();
         session_set_save_handler($redisHandler);
         session_start();
-        self::$config = require_once(__DIR__ . '/../config.php');
     }
 
     public static function url($relative_url)
@@ -69,7 +69,6 @@ class App
         $output = ob_get_clean();
         return $output;
     }
-        //TODO:: FIX: read and write CustomHandler methods comes to separate files;
 
     public static function logger(array $log_data)
     {
