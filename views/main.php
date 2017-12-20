@@ -17,10 +17,10 @@
                 <a href="<?= \App\App::$config['base_url'] ?>/delete" class="btn btn-danger">Destroy session</a>
             </form>
         </div>
-<!--        <div class="container data"style="padding: 3%;margin-top: 5%;margin-right: 50%;width: 70%; border: 1px solid black">-->
-        <div>
-            <p>Current Session: <h5><?= Handler::Prefix . session_id();?></h5></p>
-                Session Data: <?php App\App::getFullData(); ?>
+        <div class="container data" style="padding: 3%;margin-top: 5%;margin-right: 50%;width: 70%; border: 1px solid black">
+            <p><strong>Current Session:</strong><h5><?= Handler::Prefix . session_id();?></h5></p>
+            <strong>Session Data:</strong>
+            <pre><?php var_dump($_SESSION);?></pre>
         </div>
     </div>
 <?php require_once '_footer.php';

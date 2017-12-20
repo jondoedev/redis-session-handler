@@ -116,7 +116,7 @@ class App
             'value' => self::getSessionValue()
         ];
             foreach ($data as $key => $value){
-                echo $key . ': ' . $value;
+                echo $key . ': ' . $value.'<br>';
             }
     }
 
