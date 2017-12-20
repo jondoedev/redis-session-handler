@@ -27,7 +27,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color:#11a7c1 ">
     <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="<?= \App\App::$config['base_url'] ?>/">
             <img src="../public/static/img/logo.png" width="150" height="30" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
