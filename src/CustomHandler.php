@@ -30,11 +30,16 @@ class CustomHandler implements SessionHandlerInterface
     	return true;
     }
 
+    /**
+     * Clear current session variable
+     * @param string $session_id
+     * @return bool
+     */
     public function destroy($session_id) {
-        $session_id = App::getSessionId();
-        $result = $this->redis->del(self::Prefix.$session_id);
-        session_destroy();
-	    return $result;
+        $log_data = ['delete' =>['ID' => $session_id]];
+        App::logger($log_data);
+        $this->redis->del(self::Prefix.$session_id);
+	    return true;
     }
 
     public function gc($maxlifetime) {
@@ -45,24 +50,28 @@ class CustomHandler implements SessionHandlerInterface
         return true;
     }
 
+    /**
+     * Reads data from current session
+     * @param string $session_id
+     * @return string
+     */
     public function read($session_id) {
-        $session_id = App::getSessionId();
-        $result = $this->redis->get($session_id);
-        $log_data = ['read' =>
-            ['ID' => $session_id]
-        ];
+        $result = $this->redis->get(self::Prefix.$session_id);
+        $log_data = ['read' => ['ID' => $session_id]];
         App::logger($log_data);
         return $result ? $result : '';
 
     }
 
+    /**
+     * Writes data to current session
+     * @param string $session_id
+     * @param string $session_data
+     * @return bool
+     */
     public function write($session_id, $session_data) {
-        $session_data = App::getSessionData();
-        $session_id = App::getSessionId();
 	    $this->redis->set(self::Prefix.$session_id, $session_data);
-	    $log_data = ['write' =>
-            ['ID' => $session_id, 'Data' => $session_data]
-        ];
+	    $log_data = ['write' =>['ID' => $session_id, 'Data' => $session_data]];
 	    App::logger($log_data);
 	    return true;
     }

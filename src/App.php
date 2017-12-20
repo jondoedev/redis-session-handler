@@ -19,6 +19,11 @@ class App
         session_start();
     }
 
+    /**
+     * method de
+     * @param $relative_url
+     * @return string
+     */
     public static function url($relative_url)
     {
         return self::$config['base_url'] . $relative_url;
@@ -70,28 +75,49 @@ class App
         return $output;
     }
 
+    /**
+     * saving given data to the specified file
+     * @param array $log_data
+     */
     public static function logger(array $log_data)
     {
-
+        $timestamp = date('h:i:s');
         $current_date = date('d-m-Y');
         self::$logfile = self::$config['log_dir'].'log_'.$current_date.'.txt';
-        file_put_contents(self::$logfile, json_encode($log_data) . "\n", FILE_APPEND);
+        file_put_contents(self::$logfile, $timestamp.': |'.json_encode($log_data) . "\n", FILE_APPEND);
     }
 
-
-    public static function getSessionId(){
+    /**
+     * stores data sent by POST HTTP Method to session variable
+     * @return string
+     */
+    public static function getSessionKey(){
         $request['params'] = $_REQUEST;
         if (isset($request['params']['key'])) {
-            $session_id = $request['params']['key'];
-            return (string)$session_id;
+            $session_key = $request['params']['key'];
+            return (string)$session_key;
         }
     }
-    public static function getSessionData(){
+    /**
+     * stores data sent by POST HTTP Method to session variable
+     * @return string
+     */
+    public static function getSessionValue(){
         $request['params'] = $_REQUEST;
         if (isset($request['params']['value'])) {
-            $session_data = $request['params']['value'];
-            return (string)$session_data;
+            $session_value = $request['params']['value'];
+            return (string)$session_value;
         }
+    }
+
+    public static function getFullData(){
+        $data = [
+            'key' => self::getSessionKey(),
+            'value' => self::getSessionValue()
+        ];
+            foreach ($data as $key => $value){
+                echo $key . ': ' . $value;
+            }
     }
 
 }

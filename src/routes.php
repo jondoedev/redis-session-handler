@@ -11,77 +11,39 @@ function main($request){
             return (string) $_SESSION['mySession'];
         }
     }
-
-
-
     return App::render('main');
 }
 
 return [
-
     [
         'method' => 'GET',
         'pattern' => '/',
-        'handler' => function ($request) {
+        'handler' => function($request){
+          return  App::render('main');
+        }
+    ],[
+        'method' => 'POST',
+        'pattern' => '/',
+        'handler' => function($request){
+            $_SESSION[App::getSessionKey()] = App::getSessionValue();
             return main($request);
+        }
+    ],
+    [
+        'method' => 'GET',
+        'pattern' => '/delete',
+        'handler' => function($request){
+            return App::render('delete');
+
         }
     ],
     [
         'method' => 'POST',
-        'pattern' => '/',
-        'handler' => function ($request) {
-            return main($request);
-        }
-    ],
-    [
-        'method' => 'GET',
-        'pattern' => '/bla',
+        'pattern' => '/delete',
         'handler' => function($request){
-            return 'OKsd';
-        }
-    ],
-
-    [
-        'method' => 'GET',
-        'pattern' => '/example',
-        'handler' => function($request){
-            if (isset($_SESSION['count'])) {
-                $_SESSION['count']++;
-            } else {
-                $_SESSION['count'] = 1;
-            }
-            return (string)$_SESSION['count'];
-        }
-    ],
-
-    [
-        'method' => 'GET',
-        'pattern' => '/destroy',
-        'handler' => function($request){
-            return main($request);
-
-        }
-    ],
-
-    //TODO:: Make it Work!!!
-    [
-        'method' => 'POST',
-        'pattern' => '/destroy',
-        'handler' => function($request){
-            $redis = new Client([
-                'host'   => '127.0.0.1',
-                'port'   => '6379',
-            ], [
-                'parameters' => [
-                    'database' => 15
-                ]
-            ]);
-            $prefix = CustomHandler::Prefix;
-            $session_id = App::getSessionId();
-            $result = $redis->del($prefix.$session_id);
-            echo $result;
-            return $result;
-
+            unset($_SESSION[Engine\CustomHandler::Prefix.session_id()]);
+            session_destroy();
+            return App::render('delete');
         }
     ],
 
